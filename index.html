@@ -15,21 +15,21 @@
         </div>
         <div class="botones">
             <button class="numeros gris" id="borrar">AC</button>
-            <button class="numeros gris">+/-</button>
-            <button class="numeros gris" value="">%</button>
-            <button class="numeros color">÷</button>
+            <button class="numeros gris simbolos">+/-</button>
+            <button class="numeros gris simbolos" >%</button>
+            <button class="numeros color simbolos">÷</button>
             <button class="numeros">7</button>
             <button class="numeros">8</button>
             <button class="numeros">9</button>
-            <button class="numeros color">X</button>
+            <button class="numeros color simbolos">X</button>
             <button class="numeros">4</button>
             <button class="numeros">5</button>
             <button class="numeros">6</button>
-            <button class="numeros color">-</button>
+            <button class="numeros color simbolos"  >-</button>
             <button class="numeros">1</button>
             <button class="numeros">2</button>
             <button class="numeros">3</button>
-            <button class="numeros color">+</button>
+            <button class="numeros color simbolos">+</button>
             <button class="numeros">0</button>
             <button class="numeros">,</button>
             <button class="numeros" id ="send">=</button>
@@ -41,7 +41,13 @@
 
     
         const span = document.getElementById('reemplazar');
-        const botoncitos = document.querySelectorAll('.numeros');
+        const botoncitos = document.querySelectorAll('.numeros:not(.simbolos):not(#borrar)');
+        //VARIABLE PARA PODER SABER CUANDO YA TENGO EL PRIMER DATO
+
+        let CompletedNum1 = false;
+        let num1 ="";
+        let num2 ="";
+        
         
         console.log(botoncitos);
         
@@ -58,28 +64,83 @@
                 }else{
                     span.innerHTML+= boton.textContent;
                     checkspan();
-                    console.log(boton.textContent);
+                    
+                    if(CompletedNum1 == false){
+                        num1 = span.textContent;
+
+                        console.log("Esta es la variable que va estar llevando la informacion" ,num1)
+                    }
+                    
                 }
+
+
                 
             })
             
         });
         
+        //con esta constante dejo vacio el botoncito normal
         const borrar = document.getElementById('borrar').addEventListener("click", function(e){
             span.innerHTML="0"
+            var texto = "";
             
+        })
+
+      
+        // Con este addevenlistener voy detectar cual boton que activa funciones oprimio :3
+
+        const simbolos = document.querySelectorAll('.simbolos');
+        
+        simbolos.forEach(signo =>{
+
+            signo.addEventListener("click", function(e){
+
+                switch(signo.textContent){
+    
+                    case "+":  var place = 1;
+                    span.innerHTML = "";
+                    CompletedNum1= (num1 !== "") ?  true :  false;
+
+                    operation(15,1,30);
+                    break;
+    
+                    case "-": var place = 2;
+                    span.innerHTML = "";
+                    CompletedNum1= (num1 !== "") ?  true :  false;
+                    break;
+    
+                    case "X": var place = 3;
+                    span.innerHTML = "";
+                    CompletedNum1= (num1 !== "") ?  true :  false;
+                    break;
+    
+                    case "÷": var place = 4;
+                    span.innerHTML = "";
+                    CompletedNum1= (num1 !== "") ?  true :  false;
+                    break;
+    
+                    case "%": var place = 5;
+                    span.innerHTML = "";
+                    CompletedNum1= (num1 !== "") ?  true :  false;
+                    break;
+    
+                }
+                console.log(place);
+    
+            })
+         
+
         })
         
-        const send = document.getElementById('send').addEventListener("click", function(e){
-            
-            span.innerHTML+= "";
-            const mostrar= span.textContent.split(/[+÷-]/);
-            const partes = span.textContent.match(/([+-]?\d+)/g);
+       
 
-            console.log(mostrar+"prueba :3")
-            console.log(partes +"prueba 2")
 
-        })
+
+
+
+
+
+        //CON ESTA FUNCION SACO LAS PALABRAS DE AMOR  :3 JAJA 
         
         function checkspan(){
 
@@ -91,6 +152,38 @@
                  span.innerHTML = "Que rico se mueve, mamasita rica"
             }
         }
+
+        // aqui tengo las operaciones
+
+       function operation(num1, operador,num2){
+
+            switch(operador){
+
+                case 1: resultado = num1+num2;
+                break;
+
+                case 2:  resultado = num1-num2;
+                break;
+
+                case 3:  resultado = num1*num2;
+                break;
+
+                case 4:  resultado = num1/num2;
+                break;
+
+                case 5:  resultado = num1*(num2/100);
+                break;
+            }
+
+        console.log(resultado);
+        return resultado;
+        
+
+        
+
+       
+
+       }
 
         
 
