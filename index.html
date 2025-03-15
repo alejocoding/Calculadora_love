@@ -10,10 +10,11 @@
 
     <div class="calculadora">
         <div class="ventana">
+            <span id="simbolito"></span>
             
             <span id="reemplazar">0</span>
         </div>
-        <div class="botones">
+        <div class="botones" style="text-align: center;">
             <button class="numeros gris" id="borrar">AC</button>
             <button class="numeros gris simbolos">+/-</button>
             <button class="numeros gris simbolos" >%</button>
@@ -21,18 +22,18 @@
             <button class="numeros">7</button>
             <button class="numeros">8</button>
             <button class="numeros">9</button>
-            <button class="numeros color simbolos">X</button>
+            <button class="numeros color simbolos">x</button>
             <button class="numeros">4</button>
             <button class="numeros">5</button>
             <button class="numeros">6</button>
-            <button class="numeros color simbolos"  >-</button>
+            <button class="numeros color simbolos">-</button>
             <button class="numeros">1</button>
             <button class="numeros">2</button>
             <button class="numeros">3</button>
             <button class="numeros color simbolos">+</button>
-            <button class="numeros">0</button>
+            <button class="numeros longer">0</button>
             <button class="numeros">,</button>
-            <button class="numeros" id ="send">=</button>
+            <button class="numeros color" id ="send">=</button>
             
         </div>
 
@@ -41,27 +42,45 @@
 
     
         const span = document.getElementById('reemplazar');
+        const span_simbolo = document.getElementById('simbolito');
         const botoncitos = document.querySelectorAll('.numeros:not(.simbolos):not(#borrar)');
         //VARIABLE PARA PODER SABER CUANDO YA TENGO EL PRIMER DATO
 
         let CompletedNum1 = false;
+        let CompletedNum2 = false;
         let num1 ="";
         let num2 ="";
+        let place;
+        let positive = true;
+        let cantities = 0;
+        let mensaje = false;
+       
         
         
         console.log(botoncitos);
         
+
+        //ESTE FOREACH es el que me ayuda a poner en 0 la calculadora
         botoncitos.forEach(boton => {
             
             
             boton.addEventListener("click", function(){
+
+                if(mensaje == true){
+                    span.innerHTML ="0"
+                    mensaje = false;
+                }
                 
                 if(span.textContent == 0){
                     span.innerHTML =""
+                    span_simbolo.innerHTML="";
                 }
+                
+                
                 if(boton.textContent == "="){
-                    span.innerHTML+="";
+                    span.innerHTML="0";
                 }else{
+                    
                     span.innerHTML+= boton.textContent;
                     checkspan();
                     
@@ -69,12 +88,12 @@
                         num1 = span.textContent;
 
                         console.log("Esta es la variable que va estar llevando la informacion" ,num1)
+                    }else if(CompletedNum2 == false){
+                        num2= span.textContent;
+                        console.log("Variable_2" ,num2)
                     }
-                    
                 }
-
-
-                
+                        
             })
             
         });
@@ -82,9 +101,31 @@
         //con esta constante dejo vacio el botoncito normal
         const borrar = document.getElementById('borrar').addEventListener("click", function(e){
             span.innerHTML="0"
+            span_simbolo.innerHTML="";
             var texto = "";
-            
+            CompletedNum1 = false;
+            CompletedNum2 = false;
+            cantities= 0;
         })
+
+        //REALIZO LA FORMA DE HACER LA OPERACION
+
+        const enviar = document.getElementById('send').addEventListener("click", function(e){
+
+            if(num1 != "" && num2 != ""){
+
+                num1 = parseInt(num1);
+                num2 = parseInt(num2);
+                span.innerHTML ="";
+                span_simbolo.innerHTML="";
+                span.innerHTML = operation(num1,place,num2);
+                num1 = operation(num1,place,num2);
+                checkspan();
+            
+            }else{
+                span.innerHTML ="Syntax My love";
+            }
+        });
 
       
         // Con este addevenlistener voy detectar cual boton que activa funciones oprimio :3
@@ -95,95 +136,119 @@
 
             signo.addEventListener("click", function(e){
 
-                switch(signo.textContent){
-    
-                    case "+":  var place = 1;
-                    span.innerHTML = "";
-                    CompletedNum1= (num1 !== "") ?  true :  false;
+                if(num1 != ""){
 
-                    operation(15,1,30);
-                    break;
+                    switch(signo.textContent){
     
-                    case "-": var place = 2;
-                    span.innerHTML = "";
-                    CompletedNum1= (num1 !== "") ?  true :  false;
-                    break;
-    
-                    case "X": var place = 3;
-                    span.innerHTML = "";
-                    CompletedNum1= (num1 !== "") ?  true :  false;
-                    break;
-    
-                    case "÷": var place = 4;
-                    span.innerHTML = "";
-                    CompletedNum1= (num1 !== "") ?  true :  false;
-                    break;
-    
-                    case "%": var place = 5;
-                    span.innerHTML = "";
-                    CompletedNum1= (num1 !== "") ?  true :  false;
-                    break;
-    
+                        case "+": place = 1;
+                        span.innerHTML = "";
+                        span_simbolo.innerHTML="+";
+                        CompletedNum1= (num1 !== "") ?  true :  false;
+                        break;
+        
+                        case "-": place = 2;
+                        span.innerHTML = "";
+                        span_simbolo.innerHTML="-";
+                        CompletedNum1= (num1 !== "") ?  true :  false;
+                        break;
+        
+                        case "x": place = 3;
+                        span.innerHTML = "";
+                        span_simbolo.innerHTML="X";
+                        CompletedNum1= (num1 !== "") ?  true :  false;
+                        break;
+        
+                        case "÷": place = 4;
+                        span.innerHTML = "";
+                        span_simbolo.innerHTML="÷";
+                        CompletedNum1= (num1 !== "") ?  true :  false;
+                        break;
+        
+                        case "%": place = 5;
+                        span.innerHTML = "";
+                        span_simbolo.innerHTML="%";
+                        CompletedNum1= (num1 !== "") ?  true :  false;
+                        break;
+
+                        case "+/-":
+
+                        if(positive == true && cantities == 0 && span.textContent != 0){
+                            let signo = "-";
+                            signo += span.textContent;
+                            span.innerHTML =signo;
+                            num1 = span.innerHTML;
+                            cantities = 1
+                        }
+  
+        
+                    }
                 }
-                console.log(place);
-    
             })
-         
-
+        
         })
         
        
-
-
-
-
-
-
-
         //CON ESTA FUNCION SACO LAS PALABRAS DE AMOR  :3 JAJA 
         
         function checkspan(){
 
-            if(span.textContent == "2+5"){
-                span.innerHTML = "sexo con brandon"
+            if(span.textContent == 100){
+                span.innerHTML = "🔥 ¿Y ese brillo? Ah, eres tú."
+                mensaje = true;
             }
 
-            if(span.textContent == '69'){
-                 span.innerHTML = "Que rico se mueve, mamasita rica"
+            if(span.textContent == '1500'){
+                 span.innerHTML = "💖 Eres arte."
+                 mensaje = true;
             }
+
+            if(span.textContent == 1000){
+                span.innerHTML = "😍 Me gustas. Así, sin rodeos."
+                mensaje = true;
+            }
+
+            if(span.textContent == 99){
+                span.innerHTML =  "💘 Robaste mi atención."
+                mensaje = true;
+            }
+
+            if(span.textContent == 9999){
+                span.innerHTML = "✨ Eres mi tipo."
+                mensaje = true;
+            }
+
+          
+            
         }
+
 
         // aqui tengo las operaciones
 
        function operation(num1, operador,num2){
 
+            let resultado
+
             switch(operador){
 
-                case 1: resultado = num1+num2;
-                break;
+                    case 1: resultado = num1+num2;
+                    break;
 
-                case 2:  resultado = num1-num2;
-                break;
+                    case 2:  resultado = num1-num2;
+                    break;
 
-                case 3:  resultado = num1*num2;
-                break;
+                    case 3:  resultado = num1*num2;
+                    break;
 
-                case 4:  resultado = num1/num2;
-                break;
+                    case 4:  resultado = num1/num2;
+                    break;
 
-                case 5:  resultado = num1*(num2/100);
-                break;
-            }
+                    case 5:  resultado = num1*(num2/100);
+                    break;
+                }
 
-        console.log(resultado);
-        return resultado;
-        
-
-        
-
-       
-
-       }
+            console.log(resultado);
+            return resultado;
+         }
 
         
 
