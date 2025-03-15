@@ -199,7 +199,7 @@
         
         function checkspan(){
 
-            if(span.textContent == 100){
+            if(span.textContent == 1001){
                 span.innerHTML = "🔥 ¿Y ese brillo? Ah, eres tú."
                 mensaje = true;
             }
@@ -214,13 +214,18 @@
                 mensaje = true;
             }
 
-            if(span.textContent == 99){
+            if(span.textContent == 9998){
                 span.innerHTML =  "💘 Robaste mi atención."
                 mensaje = true;
             }
 
             if(span.textContent == 9999){
                 span.innerHTML = "✨ Eres mi tipo."
+                mensaje = true;
+            }
+
+            if(span.textContent === ','){
+                span.innerHTML = "😉 ¿Me das tu numero?"
                 mensaje = true;
             }
 
